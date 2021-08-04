@@ -55,7 +55,6 @@ public:
 	bool isPlanner() const;
 	void draw(QPainter *painter, const QRect &pos);
 	void clear();
-	QImage toImage(QSize size);
 #ifndef SUBSURFACE_MOBILE
 	bool eventFilter(QObject *, QEvent *) override;
 #endif

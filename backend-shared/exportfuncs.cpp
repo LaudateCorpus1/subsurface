@@ -15,7 +15,7 @@
 #include "core/sample.h"
 #include "core/selection.h"
 #include "core/sample.h"
-#include "profile-widget/profilewidget2.h"
+#include "profile-widget/profilescene.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QtConcurrent>
@@ -38,10 +38,9 @@ static const constexpr int profileScale = 4;
 static const constexpr int profileWidth = 800 * profileScale;
 static const constexpr int profileHeight = 600 * profileScale;
 
-static void exportProfile(ProfileWidget2 *profile, const struct dive *dive, const QString &filename)
+static void exportProfile(ProfileScene *profile, const struct dive *dive, const QString &filename)
 {
-	profile->setProfileState(dive, 0);
-	profile->plotDive(dive, 0, false, true);
+	profile->plotDive(dive, 0, nullptr, false, true);
 	QImage image = QImage(QSize(profileWidth, profileHeight), QImage::Format_RGB32);
 	QPainter paint;
 	paint.begin(&image);
@@ -49,11 +48,9 @@ static void exportProfile(ProfileWidget2 *profile, const struct dive *dive, cons
 	image.save(filename);
 }
 
-static std::unique_ptr<ProfileWidget2> getPrintProfile()
+static std::unique_ptr<ProfileScene> getPrintProfile()
 {
-	auto profile = std::make_unique<ProfileWidget2>(nullptr, (double)profileScale, nullptr);
-	profile->setPrintMode();
-	return profile;
+	return std::make_unique<ProfileScene>((double)profileScale, true, false);
 }
 
 void exportProfile(QString filename, bool selected_only, ExportCallback &cb)
